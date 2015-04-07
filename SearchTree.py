@@ -113,27 +113,27 @@ class node:
         #Now we need to check and see which cases we have here. We shouldn't have any double children again, so now it's either
         #Single or no child rule.
         if not self.left and not self.right:
-            noChildRule()
+            self.noChildRule()
         elif not self.left or not self.right:
-            singleChildRule()
+            self.singleChildRule()
                 
                 
 
     def delNode(self, newNode): #recursive remove function. There's three rules to this though
         #Rule one: if it's got no children we just delete it's shit.
         if not self.left and not self.right:
-            noChildRule()
+            self.noChildRule()
             return
         #Rule two: one child case: We move the pointer around then delete the node, we need the parent for this.
-        elif not left or not right:
+        elif not self.left or not self.right:
             #Handling the left pointer
             #I'm goign to include a conditional to know which pointer to work with on the parent.
             #If for some reason this gives an issue we're going to have to do something about it
             #later on.
-            singleChildRule()
+            self.singleChildRule()
         else:
             #This is the two child case: If we have two children we need to go left once, right all the way down.
             #once we do that we copy the data from the far left node into the current one and delete the left node.
             #We'll do this by keeping track of the node we're deleting from. Then we'll store the final node in another variable and swap.
             #Then we'll delete that last node at the bottom.
-            doubleChildRule()
+            self.doubleChildRule()
