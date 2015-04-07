@@ -70,10 +70,61 @@ class node:
             else:
                 right.addNode(newNode)
 
+    #Deletion Rules made into their own methods for ease of use when deleting.
+
+    def noChildRule(self):
+        del self
+
+    def singleChildRule(self):
+        if not right:
+            #This conditional checks which side that we're working on.
+            #I may include a flag you can include later on, but this
+            #is a pretty safe way to figure it out imo.
+            #Left pointer on the parent
+            if parent.getData() > data:
+                temp = self
+                parent.setLeft(left)
+                del temp
+            #Right pointer on the parent
+            elif parent.getData() < data:
+                temp = self
+                parent.setRight(self)
+                del temp
+        elif not left:
+            #Left pointer on the parent
+            if parent.getData() > data:
+                temp = self
+                parent.setLeft(right)
+                del temp
+            #Right pointer on the parent
+            elif parent.getData() < data:
+                temp = self
+                parent.setRight(right)
+                del temp
+
+    def doubleChildRule(self):
+        currentNode = self
+        finalLeft = None
+
+        #Go right once. This is the first step in this method.
+        finalLeft = right
+        #We need to iterate the rest of the way down. A loop will suffice for this for simplicity's sake.
+        while finalLeft.getLeft():
+            finalLeft = finalLeft.getLeft()
+        currentNode.setData(finalNode.getData())
+        #Now we need to check and see which cases we have here. We shouldn't have any double children again, so now it's either
+        #Single or no child rule.
+        if not left and not right:
+            noChildRule()
+        elif not left or not right:
+            singleChildRule()
+                
+                
+
     def delNode(self, newNode): #recursive remove function. There's three rules to this though
         #Rule one: if it's got no children we just delete it's shit.
         if not left and not right:
-            del self
+            noChildRule()
             return
         #Rule two: one child case: We move the pointer around then delete the node, we need the parent for this.
         elif not left or not right:
@@ -81,41 +132,10 @@ class node:
             #I'm goign to include a conditional to know which pointer to work with on the parent.
             #If for some reason this gives an issue we're going to have to do something about it
             #later on.
-            if not right:
-                #Left pointer on the parent
-                if parent.getData() > data:
-                    temp = self
-                    parent.setLeft(left)
-                    del temp
-                #Right pointer on the parent
-                elif parent.getData() < data:
-                    temp = self
-                    parent.setRight(left)
-                    del temp
-            elif not left:
-                #Left pointer on the parent
-                if parent.getData() > data:
-                    temp = self
-                    parent.setLeft(right)
-                    del temp
-                #Right pointer on the parent
-                elif parent.getData() < data:
-                    temp = self
-                    parent.setRight(right)
-                    del temp
+            singleChildRule()
         else:
             #This is the two child case: If we have two children we need to go left once, right all the way down.
             #once we do that we copy the data from the far left node into the current one and delete the left node.
             #We'll do this by keeping track of the node we're deleting from. Then we'll store the final node in another variable and swap.
             #Then we'll delete that last node at the bottom.
-
-            currentNode = self
-            finalLeft = None
-
-            #First we go right once.
-            finalLeft = right
-            while finalLeft.getLeft(): #This will iterate all the left nodes up until the last one.
-                finalLeft = finalLeft.getLeft()
-            currentNode.setData(finalLeft.getData())
-            #We'll have to do the case check again here. For now we'll just use delete until I methodize the three rules.
-            del finalLeft
+            doubleChildRule()
